@@ -1,0 +1,29 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  default:
+    deps:
+      - task: fmt
+      - task: lint
+      - task: test
+  test:
+    cmds:
+      - nix run . -- -version
+  fmt:
+    cmds:
+      - dprint fmt
+      - nixpkgs-fmt ./*.nix
+  lint:
+    # go fmt does not have option for no effect - https://github.com/golang/go/issues/41189
+    cmds:
+      - dprint check
+      - typos . .github .vscode
+      - nixpkgs-fmt --check ./*.nix
+  deps:
+    cmds:
+      - nix --version
+      - task --version
+      - dprint --version
+      - typos --version
